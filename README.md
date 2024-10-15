@@ -1,10 +1,10 @@
-# Web Development Project 4 - *Name of App Here*
+# Web Development Project 4 - *Meow Finder*
 
 Submitted by: **Carlos Sac**
 
-This web app: **insert description**
+This web app: **Discover your purrfect cat, know the breed, weight, contry of origin, and age range**
 
-Time spent: **X** hours spent in total
+Time spent: **6** hours spent in total
 
 ## Required Features
 
