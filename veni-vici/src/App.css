@@ -29,7 +29,7 @@
     margin: 0.5rem;
     border: none;
     border-radius: 0.5rem;
-    background-color: #646cff;
+    background-color: #6480ff;
     font-size: medium;
     color: white;
     font-weight: 500;
@@ -50,6 +50,8 @@
 .banned-list button {
     padding: 0.5rem 1rem;
     margin: 0.5rem;
+    margin-bottom: 0rem;
+    margin-top: 0rem;
     border: none;
     border-radius: 0.5rem;
     background-color: #a764ff;

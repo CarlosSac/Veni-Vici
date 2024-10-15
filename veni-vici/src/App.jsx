@@ -140,7 +140,7 @@ function App() {
 
                     {catData.breeds && catData.breeds.length > 0 && (
                         <div>
-                            <h2>Name: {randomCatName}</h2>
+                            <h2>{randomCatName}</h2>
                             <p className='cat-desc'>
                                 <button
                                     onClick={() =>
@@ -184,7 +184,7 @@ function App() {
             )}
 
             <button className='cat-button' onClick={fetchCatData}>
-                Find your purrfect cat
+                Find your purrfect cat 🐾
             </button>
             <div className='banned-list'>
                 <h2>Ban List</h2>
