@@ -3,8 +3,62 @@ import "./App.css";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
+const catNames = [
+    "Whiskers",
+    "Mittens",
+    "Shadow",
+    "Simba",
+    "Nala",
+    "Luna",
+    "Bella",
+    "Chloe",
+    "Oliver",
+    "Leo",
+    "Max",
+    "Charlie",
+    "Lucy",
+    "Molly",
+    "Daisy",
+    "Sophie",
+    "Tiger",
+    "Smokey",
+    "Cleo",
+    "Oscar",
+    "Jasper",
+    "Gizmo",
+    "Tigger",
+    "Pepper",
+    "Zoe",
+    "Loki",
+    "Milo",
+    "Buddy",
+    "Rocky",
+    "Jack",
+    "Lily",
+    "Sasha",
+    "Misty",
+    "Coco",
+    "Ruby",
+    "Ginger",
+    "Sammy",
+    "Felix",
+    "Penny",
+    "Boo",
+    "Pumpkin",
+    "Oreo",
+    "Midnight",
+    "Snowball",
+    "Boots",
+    "Socks",
+    "Toby",
+    "Maggie",
+    "Princess",
+    "Fluffy",
+];
+
 function App() {
     const [catData, setCatData] = useState(null);
+    const [randomCatName, setRandomCatName] = useState("");
     const [bannedBreeds, setBannedBreeds] = useState([]);
     const [bannedWeights, setBannedWeights] = useState([]);
     const [bannedCountries, setBannedCountries] = useState([]);
@@ -28,10 +82,12 @@ function App() {
                 bannedCountries.includes(breed.origin) ||
                 bannedAgeRanges.includes(breed.life_span)
             ) {
-                console.log("Breed is banned, fetching another cat...");
-                fetchCatData(); // Fetch another cat if the breed is banned
+                fetchCatData();
             } else {
                 setCatData(data[0]);
+                setRandomCatName(
+                    catNames[Math.floor(Math.random() * catNames.length)]
+                );
             }
         } catch (error) {
             console.error("Error fetching cat data:", error);
@@ -71,21 +127,21 @@ function App() {
     };
 
     return (
-        <div>
-            <h1>Random Cat Information</h1>
-            <button onClick={fetchCatData}>Get Random Cat</button>
+        <div className='cat-card'>
+            <h1>Cat Finder</h1>
+
             {catData ? (
                 <div>
                     <img
+                        className='cat-image'
                         src={catData.url}
                         alt='Random Cat'
-                        style={{ width: "300px", height: "300px" }}
                     />
+
                     {catData.breeds && catData.breeds.length > 0 && (
                         <div>
-                            <h2>Name: {catData.breeds[0].name}</h2>
-                            <p>
-                                Breed:{" "}
+                            <h2>Name: {randomCatName}</h2>
+                            <p className='cat-desc'>
                                 <button
                                     onClick={() =>
                                         banBreed(catData.breeds[0].name)
@@ -93,9 +149,7 @@ function App() {
                                 >
                                     {catData.breeds[0].name}
                                 </button>
-                            </p>
-                            <p>
-                                Weight:{" "}
+
                                 <button
                                     onClick={() =>
                                         banWeight(
@@ -105,9 +159,7 @@ function App() {
                                 >
                                     {catData.breeds[0].weight.metric} kg
                                 </button>
-                            </p>
-                            <p>
-                                Country:{" "}
+
                                 <button
                                     onClick={() =>
                                         banCountry(catData.breeds[0].origin)
@@ -115,9 +167,7 @@ function App() {
                                 >
                                     {catData.breeds[0].origin}
                                 </button>
-                            </p>
-                            <p>
-                                Age Range:{" "}
+
                                 <button
                                     onClick={() =>
                                         banAgeRange(catData.breeds[0].life_span)
@@ -130,12 +180,16 @@ function App() {
                     )}
                 </div>
             ) : (
-                <p>Click the button to get a random cat picture.</p>
+                <h2>😺😸😹😻😼😽🙀🐱😾😿</h2>
             )}
-            <div>
-                <h2>Banned Items</h2>
+
+            <button className='cat-button' onClick={fetchCatData}>
+                Find your purrfect cat
+            </button>
+            <div className='banned-list'>
+                <h2>Ban List</h2>
+                <p>Select an attribute in your listing to ban it</p>
                 <p>
-                    Breeds:{" "}
                     {bannedBreeds.map((breed) => (
                         <button key={breed} onClick={() => unbanBreed(breed)}>
                             {breed}
@@ -143,7 +197,6 @@ function App() {
                     ))}
                 </p>
                 <p>
-                    Weights:{" "}
                     {bannedWeights.map((weight) => (
                         <button
                             key={weight}
@@ -154,7 +207,6 @@ function App() {
                     ))}
                 </p>
                 <p>
-                    Countries:{" "}
                     {bannedCountries.map((country) => (
                         <button
                             key={country}
@@ -165,7 +217,6 @@ function App() {
                     ))}
                 </p>
                 <p>
-                    Age Ranges:{" "}
                     {bannedAgeRanges.map((ageRange) => (
                         <button
                             key={ageRange}
