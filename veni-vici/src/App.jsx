@@ -11,33 +11,27 @@ function App() {
     const [bannedAgeRanges, setBannedAgeRanges] = useState([]);
 
     const fetchCatData = async () => {
-        console.log("Fetching cat data..."); // Log to verify API call
+        console.log("Fetching cat data...");
         try {
             const response = await fetch(
-                "https://api.thecatapi.com/v1/images/search?limit=10&has_breeds=1&api_key=" +
-                    API_KEY
+                `https://api.thecatapi.com/v1/images/search?has_breeds=1&api_key=${API_KEY}`
             );
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("JSON Response:", data); // Log the JSON response
 
-            const filteredData = data.filter((cat) => {
-                const breed = cat.breeds[0];
-                return (
-                    !bannedBreeds.includes(breed.name) &&
-                    !bannedWeights.includes(breed.weight.metric) &&
-                    !bannedCountries.includes(breed.origin) &&
-                    !bannedAgeRanges.includes(breed.life_span)
-                );
-            });
-
-            if (filteredData.length > 0) {
-                setCatData(filteredData[0]);
+            const breed = data[0].breeds[0];
+            if (
+                bannedBreeds.includes(breed.name) ||
+                bannedWeights.includes(breed.weight.metric) ||
+                bannedCountries.includes(breed.origin) ||
+                bannedAgeRanges.includes(breed.life_span)
+            ) {
+                console.log("Breed is banned, fetching another cat...");
+                fetchCatData(); // Fetch another cat if the breed is banned
             } else {
-                console.log("No non-banned cats found, fetching again...");
-                fetchCatData(); // Fetch again if all cats are banned
+                setCatData(data[0]);
             }
         } catch (error) {
             console.error("Error fetching cat data:", error);
@@ -60,6 +54,22 @@ function App() {
         setBannedAgeRanges([...bannedAgeRanges, ageRange]);
     };
 
+    const unbanBreed = (breed) => {
+        setBannedBreeds(bannedBreeds.filter((b) => b !== breed));
+    };
+
+    const unbanWeight = (weight) => {
+        setBannedWeights(bannedWeights.filter((w) => w !== weight));
+    };
+
+    const unbanCountry = (country) => {
+        setBannedCountries(bannedCountries.filter((c) => c !== country));
+    };
+
+    const unbanAgeRange = (ageRange) => {
+        setBannedAgeRanges(bannedAgeRanges.filter((a) => a !== ageRange));
+    };
+
     return (
         <div>
             <h1>Random Cat Information</h1>
@@ -69,7 +79,7 @@ function App() {
                     <img
                         src={catData.url}
                         alt='Random Cat'
-                        style={{ width: "300px", height: "250px" }}
+                        style={{ width: "300px", height: "300px" }}
                     />
                     {catData.breeds && catData.breeds.length > 0 && (
                         <div>
@@ -124,10 +134,47 @@ function App() {
             )}
             <div>
                 <h2>Banned Items</h2>
-                <p>Breeds: {bannedBreeds.join(", ")}</p>
-                <p>Weights: {bannedWeights.join(", ")}</p>
-                <p>Countries: {bannedCountries.join(", ")}</p>
-                <p>Age Ranges: {bannedAgeRanges.join(", ")}</p>
+                <p>
+                    Breeds:{" "}
+                    {bannedBreeds.map((breed) => (
+                        <button key={breed} onClick={() => unbanBreed(breed)}>
+                            {breed}
+                        </button>
+                    ))}
+                </p>
+                <p>
+                    Weights:{" "}
+                    {bannedWeights.map((weight) => (
+                        <button
+                            key={weight}
+                            onClick={() => unbanWeight(weight)}
+                        >
+                            {weight} kg
+                        </button>
+                    ))}
+                </p>
+                <p>
+                    Countries:{" "}
+                    {bannedCountries.map((country) => (
+                        <button
+                            key={country}
+                            onClick={() => unbanCountry(country)}
+                        >
+                            {country}
+                        </button>
+                    ))}
+                </p>
+                <p>
+                    Age Ranges:{" "}
+                    {bannedAgeRanges.map((ageRange) => (
+                        <button
+                            key={ageRange}
+                            onClick={() => unbanAgeRange(ageRange)}
+                        >
+                            {ageRange} years
+                        </button>
+                    ))}
+                </p>
             </div>
         </div>
     );
