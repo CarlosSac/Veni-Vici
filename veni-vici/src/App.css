@@ -34,6 +34,7 @@
     color: white;
     font-weight: 500;
     cursor: pointer;
+    border: 1px solid #6480ff;
 }
 
 .cat-desc button {
