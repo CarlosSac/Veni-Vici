@@ -1,5 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
+import CatCard from "./components/CatCard";
+import BanList from "./components/BanList";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -74,7 +76,6 @@ function App() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-
             const breed = data[0].breeds[0];
             if (
                 bannedBreeds.includes(breed.name) ||
@@ -94,139 +95,50 @@ function App() {
         }
     };
 
-    const banBreed = (breed) => {
-        setBannedBreeds([...bannedBreeds, breed]);
-    };
-
-    const banWeight = (weight) => {
-        setBannedWeights([...bannedWeights, weight]);
-    };
-
-    const banCountry = (country) => {
+    const banBreed = (breed) => setBannedBreeds([...bannedBreeds, breed]);
+    const banWeight = (weight) => setBannedWeights([...bannedWeights, weight]);
+    const banCountry = (country) =>
         setBannedCountries([...bannedCountries, country]);
-    };
-
-    const banAgeRange = (ageRange) => {
+    const banAgeRange = (ageRange) =>
         setBannedAgeRanges([...bannedAgeRanges, ageRange]);
-    };
 
-    const unbanBreed = (breed) => {
+    const unbanBreed = (breed) =>
         setBannedBreeds(bannedBreeds.filter((b) => b !== breed));
-    };
-
-    const unbanWeight = (weight) => {
+    const unbanWeight = (weight) =>
         setBannedWeights(bannedWeights.filter((w) => w !== weight));
-    };
-
-    const unbanCountry = (country) => {
+    const unbanCountry = (country) =>
         setBannedCountries(bannedCountries.filter((c) => c !== country));
-    };
-
-    const unbanAgeRange = (ageRange) => {
+    const unbanAgeRange = (ageRange) =>
         setBannedAgeRanges(bannedAgeRanges.filter((a) => a !== ageRange));
-    };
 
     return (
         <div className='cat-card'>
             <h1>Cat Finder</h1>
-
             {catData ? (
-                <div>
-                    <img
-                        className='cat-image'
-                        src={catData.url}
-                        alt='Random Cat'
-                    />
-
-                    {catData.breeds && catData.breeds.length > 0 && (
-                        <div>
-                            <h2>{randomCatName}</h2>
-                            <p className='cat-desc'>
-                                <button
-                                    onClick={() =>
-                                        banBreed(catData.breeds[0].name)
-                                    }
-                                >
-                                    {catData.breeds[0].name}
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        banWeight(
-                                            catData.breeds[0].weight.metric
-                                        )
-                                    }
-                                >
-                                    {catData.breeds[0].weight.metric} kg
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        banCountry(catData.breeds[0].origin)
-                                    }
-                                >
-                                    {catData.breeds[0].origin}
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        banAgeRange(catData.breeds[0].life_span)
-                                    }
-                                >
-                                    {catData.breeds[0].life_span} years
-                                </button>
-                            </p>
-                        </div>
-                    )}
-                </div>
+                <CatCard
+                    catData={catData}
+                    randomCatName={randomCatName}
+                    banBreed={banBreed}
+                    banWeight={banWeight}
+                    banCountry={banCountry}
+                    banAgeRange={banAgeRange}
+                />
             ) : (
                 <h2>😺😸😹😻😼😽🙀🐱😾😿</h2>
             )}
-
             <button className='cat-button' onClick={fetchCatData}>
                 Find your purrfect cat 🐾
             </button>
-            <div className='banned-list'>
-                <h2>Ban List</h2>
-                <p>Select an attribute in your listing to ban it</p>
-                <p>
-                    {bannedBreeds.map((breed) => (
-                        <button key={breed} onClick={() => unbanBreed(breed)}>
-                            {breed}
-                        </button>
-                    ))}
-                </p>
-                <p>
-                    {bannedWeights.map((weight) => (
-                        <button
-                            key={weight}
-                            onClick={() => unbanWeight(weight)}
-                        >
-                            {weight} kg
-                        </button>
-                    ))}
-                </p>
-                <p>
-                    {bannedCountries.map((country) => (
-                        <button
-                            key={country}
-                            onClick={() => unbanCountry(country)}
-                        >
-                            {country}
-                        </button>
-                    ))}
-                </p>
-                <p>
-                    {bannedAgeRanges.map((ageRange) => (
-                        <button
-                            key={ageRange}
-                            onClick={() => unbanAgeRange(ageRange)}
-                        >
-                            {ageRange} years
-                        </button>
-                    ))}
-                </p>
-            </div>
+            <BanList
+                bannedBreeds={bannedBreeds}
+                bannedWeights={bannedWeights}
+                bannedCountries={bannedCountries}
+                bannedAgeRanges={bannedAgeRanges}
+                unbanBreed={unbanBreed}
+                unbanWeight={unbanWeight}
+                unbanCountry={unbanCountry}
+                unbanAgeRange={unbanAgeRange}
+            />
         </div>
     );
 }
